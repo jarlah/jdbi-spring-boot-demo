@@ -32,11 +32,9 @@ public class UserService {
         try {
             create();
         } catch (DemoException ignored) {}
-        jdbi.withExtension(UserDao.class, userDao -> {
-            if (userDao.listUsers().size() != 0) {
-                throw new IllegalStateException("User list should be empty");
-            }
-            return null;
-        });
+        UserDao userDao = jdbi.onDemand(UserDao.class);
+        if (userDao.listUsers().size() != 0) {
+            throw new IllegalStateException("User list should be empty");
+        }
     }
 }
